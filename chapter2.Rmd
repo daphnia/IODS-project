@@ -33,12 +33,35 @@ p_age <- ggplot(learning2014, aes(age)) + geom_histogram(binwidth = 1, fill="pur
 p_age
 ```
 
-Scatter plots of all the variables using gender as a factor are presented in a matrix below: 
+Scatter plots of all the variables using gender as a factor are presented in a matrix below. This is just to show, how much better plots can be produced by GGally and ggplot2 libraries. Those are found below this first picture: 
 ```{r echo=T, fig.cap="Black dots marks females, red dots marks males.", fig.height=9, fig.width=12}
 pairs(learning2014[-1], col=learning2014$gender)
 ```
 
-
-```{r echo=T}
+GGally and ggplot2 produces another, way better, scatterplot matrix:
+```{r echo=T, fig.cap="Here red color marks females, blue color marks males.",fig.height=9, fig.width=12}
+library(ggplot2)
 library(GGally)
+p <- ggpairs(learning2014, mapping = aes(col = gender, alpha = 0.3), lower = list(combo = wrap("facethist", bins = 20)))
+p
+```
+
+* It can be seen from the matrix above that there are remarkably more females than males.
+* It could be analysed if there is statistically significant correlation between gender and attitude (note: there is a tail or a tiny peak of males with low attitude).
+* Gender probably does not explain statistically if one has obtained surface learning as a strategy, although the distributions look a bit different between genders because of **kurtosis**. It means that only the variances are different between genders when means are about the same. The variability is higher among males. 
+* Also correlation between attitude vs. exam points should be checked. Alternative hypothesis could be: higher attitude results in higher points. 
+* There could be a statistically significant negative correlation between deep and surf, which is quite obvious according to common sense. In correlation coefficients there is also some difference between genders, which probably is explained by a single female outlier. **According to literature, the correlation coefficient is very sensitive for outliers**, i.e.. abnormal/unexpected values. 
+* Interesting is if there is not statistically significant correlation between deep learning and exam points, especially among females (note, there might be a female outlier which could explain the low correlation coefficient). This relationship needs more research. 
+* I cannot see any non-linear relationships. **NOTE:** it is always important to look both the scatter plot and correlation coefficient as even though the correlation coefficient is low there might be **non-linear correlation** seen from scatter plot. Also the low correlation coefficient can be a result of the **sensitivity for outliers**. 
+
+###Linear regression model
+For the following regression analysis the exam points will be a target (aka dependent, response) variable and let's choose three independent (aka explanatory) variables: 
+
+1. *attitude* towards data science
+2. use of *deep* learning strategies
+3. use of *surf*ace learning strategies.
+
+**To Be Continued!**
+```{r echo=T}
+#To Be Continued!
 ```

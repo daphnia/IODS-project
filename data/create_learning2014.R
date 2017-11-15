@@ -38,11 +38,12 @@ str(learning2014_full)
 colnames(learning2014_full)[57] <- "age"
 colnames(learning2014_full)[58] <- "attitude"
 colnames(learning2014_full)[59] <- "points"
+#   Another option for renaming from dplyr: 
+#   learning2014_full <- rename(learning2014_full, age = Age, attitude = Attitude, points = Points)
 #Then the unnecessary columns are removed: 
 analysis_colums <- c("gender","age","attitude", "deep", "stra", "surf", "points")
 learning2014 <- select(learning2014_full, one_of(analysis_colums))
 str(learning2014)
-# Another option from dplyr: learning2014_full <- rename(learning2014_full, age = Age, attitude = Attitude, points = Points)
 
 #Let's remove the observations where the exam points zero:
 learning2014 <- filter(learning2014, points != 0)
