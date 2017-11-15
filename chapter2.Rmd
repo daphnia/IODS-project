@@ -1,7 +1,44 @@
-# Insert chapter 2 title here
+# RStudio Exercise 2: Regression and Model Validation
 
-*Describe the work you have done this week and summarize your learning.*
+<!-- > *INSTRUCTIONS:*
+> *Describe the work you have done this week and summarize your learning.*
+> 
+> - Describe your work and results clearly. 
+> - Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods
+> - Assume the reader has no previous knowledge of your data or the more advanced methods you are using  -->
 
-- Describe your work and results clearly. 
-- Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods
-- Assume the reader has no previous knowledge of your data or the more advanced methods you are using  
+## Data Wrangling and general remarks
+First I did some data wrangling, i.e. formatting a dataset to be suitable and nice to be used in an analysis later, in this case in regression analysis. The data wrangling was done in a R Script file *create_learning2014.R* and the formatted dataset is in a file *learning2014.csv*. As described in the wrangling file the data was originally collected for international survey of Approaches to Learning. For details and links to further information have a look at the [create_learning2014.R](https://github.com/daphnia/IODS-project/blob/master/data/create_learning2014.R) at my [repository](https://github.com/daphnia/IODS-project).
+
+After practising and doing a bit of the exercise the RStudio workspace became a bit cluttered. So, I found that a function `remove(...)` can be used to remove objects from the memory. It is handy to clean up the environment once in a while.
+
+Another important thing is that you have to load the extra libraries every time you start RStudio, even though files create_learning2014.R, .RData and .Rhistory are used to load the situation where you were when quitting last time.
+
+##Analysis
+
+Let's first read the data set to memory and have a look at the data set. Summary off the variables are below:
+```{r echo=T}
+#getwd()
+#NOTE: some functions are commented out to make the knitted output more simple.
+learning2014 <- read.csv("data/learning2014.csv", header = TRUE)
+str(learning2014)
+summary(learning2014)
+```
+It consists of 166 observations of 7 variables. The variables deep (deep learning), stra (strategic learning) and surf (surface learning) represents three different dimensions of the way of learning. They have been calculated as means of several other variables in the previous data wrangling. This data is in Likert scale and based on data originally obtained from a questionnaire.
+
+There is a noticeable deviation (*skewness*) in age at the highest quartile, shifting the mean age away from median value towards the older end of the distribution. This can be seen clearly from a histogram below: 
+```{r echo=T}
+library(ggplot2)
+p_age <- ggplot(learning2014, aes(age)) + geom_histogram(binwidth = 1, fill="purple", colour="red") + ggtitle("Histogram of Student's Ages")
+p_age
+```
+
+Scatter plots of all the variables using gender as a factor are presented in a matrix below: 
+```{r echo=T, fig.cap="Black dots marks females, red dots marks males.", fig.height=9, fig.width=12}
+pairs(learning2014[-1], col=learning2014$gender)
+```
+
+
+```{r echo=T}
+library(GGally)
+```
