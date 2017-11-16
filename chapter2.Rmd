@@ -7,7 +7,7 @@
 > - Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods
 > - Assume the reader has no previous knowledge of your data or the more advanced methods you are using  -->
 
-## Data Wrangling and general remarks
+## Data Wrangling and General Remarks
 First I did some data wrangling, i.e. formatting a dataset to be suitable and nice to be used in an analysis later, in this case in regression analysis. The data wrangling was done in a R Script file *create_learning2014.R* and the formatted dataset is in a file *learning2014.csv*. As described in the wrangling file the data was originally collected for international survey of Approaches to Learning. For details and links to further information have a look at the [create_learning2014.R](https://github.com/daphnia/IODS-project/blob/master/data/create_learning2014.R) at my [repository](https://github.com/daphnia/IODS-project).
 
 After practising and doing a bit of the exercise the RStudio workspace became a bit cluttered. So, I found that a function `remove(...)` can be used to remove objects from the memory. It is handy to clean up the environment once in a while.
@@ -16,7 +16,7 @@ Another important thing is that you have to load the extra libraries every time 
 
 ##Analysis
 
-Let's first read the data set to memory and have a look at the data set. Summary off the variables are below:
+Let's first read the data set into memory and have a look at the data set. Summary off the variables are below:
 ```{r echo=T}
 #getwd()
 #NOTE: some functions are commented out to make the knitted output more simple.
@@ -38,7 +38,7 @@ Scatter plots of all the variables using gender as a factor are presented in a m
 pairs(learning2014[-1], col=learning2014$gender)
 ```
 
-GGally and ggplot2 produces another, way better, scatterplot matrix:
+GGally and ggplot2 produces another, more informative, scatterplot matrix:
 ```{r echo=T, fig.cap="Here red color marks females, blue color marks males.",fig.height=9, fig.width=12}
 library(ggplot2)
 library(GGally)
@@ -48,19 +48,34 @@ p
 
 * It can be seen from the matrix above that there are remarkably more females than males.
 * It could be analysed if there is statistically significant correlation between gender and attitude (note: there is a tail or a tiny peak of males with low attitude).
-* Gender probably does not explain statistically if one has obtained surface learning as a strategy, although the distributions look a bit different between genders because of **kurtosis**. It means that only the variances are different between genders when means are about the same. The variability is higher among males. 
+* Gender probably does not explain statistically if one has obtained surface learning as a strategy, although the distributions look a bit different between genders because of *kurtosis*. It means that only the variances are different between genders when means are about the same. The variability is higher among males. 
 * Also correlation between attitude vs. exam points should be checked. Alternative hypothesis could be: higher attitude results in higher points. 
 * There could be a statistically significant negative correlation between deep and surf, which is quite obvious according to common sense. In correlation coefficients there is also some difference between genders, which probably is explained by a single female outlier. **According to literature, the correlation coefficient is very sensitive for outliers**, i.e.. abnormal/unexpected values. 
 * Interesting is if there is not statistically significant correlation between deep learning and exam points, especially among females (note, there might be a female outlier which could explain the low correlation coefficient). This relationship needs more research. 
 * I cannot see any non-linear relationships. **NOTE:** it is always important to look both the scatter plot and correlation coefficient as even though the correlation coefficient is low there might be **non-linear correlation** seen from scatter plot. Also the low correlation coefficient can be a result of the **sensitivity for outliers**. 
 
 ###Linear regression model
-For the following regression analysis the exam points will be a target (aka dependent, response) variable and let's choose three independent (aka explanatory) variables: 
+For the following regression analysis the exam *points* will be a target (aka dependent, response) variable and let's choose three independent (aka explanatory) variables: 
 
 1. *attitude* towards data science
 2. use of *deep* learning strategies
 3. use of *surf*ace learning strategies.
 
+Here is a regression model with multiple explanatory variables:
+```{r echo=T}
+my_model <- lm(points ~ attitude + surf + deep, data = learning2014)
+summary(my_model)
+```
+From the summary above it can be seen that only attitude has statistically significant relationship with exam points (p=1.18e-08 so the risk that this is a wrong conclusion, is extremely low). Standard error (0.05766) of regression coefficient for attitude is not an order of magnitude less than the coefficient itself (0.34661), indicating that there is some variability in the estimate for the coefficient. R-squared is about 20 %. It means that on the average only 20 % of variability in predicted exam points can be explained by these three variables. The F-statistic indicates, would the model be better with fewer variables. In that case the p-value would be higher. Now p-value is 5.217e-08. Removing *surf* from the model gives a bit lower p-value 2.326e-08. Removing also the *deep* gives even lower p-value 4.119e-09. 
+
+After testing also the other variables and checking the p-values from F-tests, it can be concluded that the best model has only the attitude as an explanatory variable. According to this model below, a student has to rise attitude by three numbers in order to increase exam points by one number. Also the intercept suggests that even if a student has zero attitude, the exam points would be 12 (from the simplified model below), which is quite reasonable.
+
+```{r echo=T}
+my_best_model <- lm(points ~ attitude, data = learning2014)
+summary(my_best_model)
+```
+
+###Model validation
 **To Be Continued!**
 ```{r echo=T}
 #To Be Continued!

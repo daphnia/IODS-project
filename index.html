@@ -142,7 +142,7 @@ $(document).ready(function () {
 <ul>
 <li><a href="#about-the-project">About the project</a></li>
 <li><a href="#rstudio-exercise-2-regression-and-model-validation">RStudio Exercise 2: Regression and Model Validation</a><ul>
-<li><a href="#data-wrangling-and-general-remarks">Data Wrangling and general remarks</a></li>
+<li><a href="#data-wrangling-and-general-remarks">Data Wrangling and General Remarks</a></li>
 <li><a href="#analysis">Analysis</a></li>
 </ul></li>
 </ul>
@@ -164,14 +164,14 @@ $(document).ready(function () {
 > - Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods
 > - Assume the reader has no previous knowledge of your data or the more advanced methods you are using  -->
 <div id="data-wrangling-and-general-remarks" class="section level2">
-<h2>Data Wrangling and general remarks</h2>
+<h2>Data Wrangling and General Remarks</h2>
 <p>First I did some data wrangling, i.e. formatting a dataset to be suitable and nice to be used in an analysis later, in this case in regression analysis. The data wrangling was done in a R Script file <em>create_learning2014.R</em> and the formatted dataset is in a file <em>learning2014.csv</em>. As described in the wrangling file the data was originally collected for international survey of Approaches to Learning. For details and links to further information have a look at the <a href="https://github.com/daphnia/IODS-project/blob/master/data/create_learning2014.R">create_learning2014.R</a> at my <a href="https://github.com/daphnia/IODS-project">repository</a>.</p>
 <p>After practising and doing a bit of the exercise the RStudio workspace became a bit cluttered. So, I found that a function <code>remove(...)</code> can be used to remove objects from the memory. It is handy to clean up the environment once in a while.</p>
 <p>Another important thing is that you have to load the extra libraries every time you start RStudio, even though files create_learning2014.R, .RData and .Rhistory are used to load the situation where you were when quitting last time.</p>
 </div>
 <div id="analysis" class="section level2">
 <h2>Analysis</h2>
-<p>Let’s first read the data set to memory and have a look at the data set. Summary off the variables are below:</p>
+<p>Let’s first read the data set into memory and have a look at the data set. Summary off the variables are below:</p>
 <pre class="r"><code>#getwd()
 #NOTE: some functions are commented out to make the knitted output more simple.
 learning2014 &lt;- read.csv(&quot;data/learning2014.csv&quot;, header = TRUE)
@@ -213,7 +213,7 @@ p_age</code></pre>
 Black dots marks females, red dots marks males.
 </p>
 </div>
-<p>GGally and ggplot2 produces another, way better, scatterplot matrix:</p>
+<p>GGally and ggplot2 produces another, more informative, scatterplot matrix:</p>
 <pre class="r"><code>library(ggplot2)
 library(GGally)
 p &lt;- ggpairs(learning2014, mapping = aes(col = gender, alpha = 0.3), lower = list(combo = wrap(&quot;facethist&quot;, bins = 20)))
@@ -227,7 +227,7 @@ Here red color marks females, blue color marks males.
 <ul>
 <li>It can be seen from the matrix above that there are remarkably more females than males.</li>
 <li>It could be analysed if there is statistically significant correlation between gender and attitude (note: there is a tail or a tiny peak of males with low attitude).</li>
-<li>Gender probably does not explain statistically if one has obtained surface learning as a strategy, although the distributions look a bit different between genders because of <strong>kurtosis</strong>. It means that only the variances are different between genders when means are about the same. The variability is higher among males.</li>
+<li>Gender probably does not explain statistically if one has obtained surface learning as a strategy, although the distributions look a bit different between genders because of <em>kurtosis</em>. It means that only the variances are different between genders when means are about the same. The variability is higher among males.</li>
 <li>Also correlation between attitude vs. exam points should be checked. Alternative hypothesis could be: higher attitude results in higher points.</li>
 <li>There could be a statistically significant negative correlation between deep and surf, which is quite obvious according to common sense. In correlation coefficients there is also some difference between genders, which probably is explained by a single female outlier. <strong>According to literature, the correlation coefficient is very sensitive for outliers</strong>, i.e.. abnormal/unexpected values.</li>
 <li>Interesting is if there is not statistically significant correlation between deep learning and exam points, especially among females (note, there might be a female outlier which could explain the low correlation coefficient). This relationship needs more research.</li>
@@ -235,12 +235,60 @@ Here red color marks females, blue color marks males.
 </ul>
 <div id="linear-regression-model" class="section level3">
 <h3>Linear regression model</h3>
-<p>For the following regression analysis the exam points will be a target (aka dependent, response) variable and let’s choose three independent (aka explanatory) variables:</p>
+<p>For the following regression analysis the exam <em>points</em> will be a target (aka dependent, response) variable and let’s choose three independent (aka explanatory) variables:</p>
 <ol style="list-style-type: decimal">
 <li><em>attitude</em> towards data science</li>
 <li>use of <em>deep</em> learning strategies</li>
 <li>use of <em>surf</em>ace learning strategies.</li>
 </ol>
+<p>Here is a regression model with multiple explanatory variables:</p>
+<pre class="r"><code>my_model &lt;- lm(points ~ attitude + surf + deep, data = learning2014)
+summary(my_model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = points ~ attitude + surf + deep, data = learning2014)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -16.9168  -3.1487   0.3667   3.8326  11.3519 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 18.35507    4.71237   3.895 0.000143 ***
+## attitude     0.34661    0.05766   6.011 1.18e-08 ***
+## surf        -1.09114    0.83599  -1.305 0.193669    
+## deep        -0.94846    0.79025  -1.200 0.231815    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 5.313 on 162 degrees of freedom
+## Multiple R-squared:  0.2024, Adjusted R-squared:  0.1876 
+## F-statistic:  13.7 on 3 and 162 DF,  p-value: 5.217e-08</code></pre>
+<p>From the summary above it can be seen that only attitude has statistically significant relationship with exam points (p=1.18e-08 so the risk that this is a wrong conclusion, is extremely low). Standard error (0.05766) of regression coefficient for attitude is not an order of magnitude less than the coefficient itself (0.34661), indicating that there is some variability in the estimate for the coefficient. R-squared is about 20 %. It means that on the average only 20 % of variability in predicted exam points can be explained by these three variables. The F-statistic indicates, would the model be better with fewer variables. In that case the p-value would be higher. Now p-value is 5.217e-08. Removing <em>surf</em> from the model gives a bit lower p-value 2.326e-08. Removing also the <em>deep</em> gives even lower p-value 4.119e-09.</p>
+<p>After testing also the other variables and checking the p-values from F-tests, it can be concluded that the best model has only the attitude as an explanatory variable. According to this model below, a student has to rise attitude by three numbers in order to increase exam points by one number. Also the intercept suggests that even if a student has zero attitude, the exam points would be 12 (from the simplified model below), which is quite reasonable.</p>
+<pre class="r"><code>my_best_model &lt;- lm(points ~ attitude, data = learning2014)
+summary(my_best_model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = points ~ attitude, data = learning2014)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -16.9763  -3.2119   0.4339   4.1534  10.6645 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 11.63715    1.83035   6.358 1.95e-09 ***
+## attitude     0.35255    0.05674   6.214 4.12e-09 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 5.32 on 164 degrees of freedom
+## Multiple R-squared:  0.1906, Adjusted R-squared:  0.1856 
+## F-statistic: 38.61 on 1 and 164 DF,  p-value: 4.119e-09</code></pre>
+</div>
+<div id="model-validation" class="section level3">
+<h3>Model validation</h3>
 <p><strong>To Be Continued!</strong></p>
 <pre class="r"><code>#To Be Continued!</code></pre>
 <hr />
