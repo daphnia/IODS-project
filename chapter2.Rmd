@@ -34,12 +34,12 @@ p_age
 ```
 
 Scatter plots of all the variables using gender as a factor are presented in a matrix below. This is just to show, how much better plots can be produced by GGally and ggplot2 libraries. Those are found below this first picture: 
-```{r echo=T, fig.cap="Black dots marks females, red dots marks males.", fig.height=9, fig.width=12}
+```{r echo=T, fig.cap="**In this scatter plot matrix black dots marks females and red dots marks males**", fig.height=9, fig.width=12}
 pairs(learning2014[-1], col=learning2014$gender)
 ```
 
 GGally and ggplot2 produces another, more informative, scatterplot matrix:
-```{r echo=T, fig.cap="Here red color marks females, blue color marks males.",fig.height=9, fig.width=12}
+```{r echo=T, fig.cap="**In this scatter plot matrix red color marks females and blue color marks males**",fig.height=9, fig.width=12}
 library(ggplot2)
 library(GGally)
 p <- ggpairs(learning2014, mapping = aes(col = gender, alpha = 0.3), lower = list(combo = wrap("facethist", bins = 20)))
@@ -77,7 +77,25 @@ summary(my_best_model)
 
 ###Model validation
 
-**To Be Continued!**
-```{r echo=T}
-#To Be Continued!
+Let's make some graphical model validation using the following plots: Residuals vs Fitted values, Normal QQ-plot and Residuals vs Leverage.
+
+
+
+```{r echo=T, fig.cap="**A model *my_model* explaining exam points with attitude towards data science, use of deep learning strategies and use of surface learning strategies**"}
+par(mfrow = c(2,2))
+plot(my_model, which = c(1,2,5))
 ```
+
+```{r echo=T, fig.cap="**A model *my_best_model* explaining exam points with attitude towards data science**"}
+par(mfrow = c(2,2))
+plot(my_best_model, which = c(1,2,5))
+```
+
+As the model is linear regression it is assumed that the relationship between attitude and exam points are linear. From the scatter plots further above it can be seen that this is not exactly the case: there are some observations where exam points are exceptionally low regardless of the attitude. It can be imagined, that these observations reflects some problems – not attitude problems – in gathering exam points. 
+
+1. Residuals vs fitted values is a plot that can be used to check the model assumption that the residuals (ε, size of the errors) do not depend on explanatory variables but only on random variability (in other words, residuals has a constant variance ($σ^{2}$). In the plot the dots should be randomly distributed, otherwise it indicates a problem.
+    i) In these cases there can be seen some tails and also a group of outliers near the x-axle. 
+2. Normal QQ-plot can be used to check, are residuals distributed normally. If they are, the dots should be aligned on the line.
+    i) In these cases there can be seen some tails.
+3. Residuals vs leverage is a plot that can be used to assess how big effect a single observation has to the model. In the plot a big x value means exceptionally big effect and refers to that the observation in question might be an outlier (*Note*: if an exceptional value (y axle) of target variable is near the mean of explanatory variables of the model, the observation does not have so big (leverage) effect to the regression line).
+    i) In the first model there is clearly a single exceptional value.
