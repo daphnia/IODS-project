@@ -1,0 +1,28 @@
+<!-- 
+---
+title: "RStudio exercise 3: Logistic Regression"
+author: "Hans Hellén"
+date: "Wed Nov 22 23:14:59 2017"
+output: html_document
+---
+-->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE))
+```
+
+#RStudio exercise 3: Logistic Regression
+
+## Data Wrangling
+For details and links to further information about the data have a look at the wrangling script [create_alc.R](https://github.com/daphnia/IODS-project/blob/master/data/create_alc.R) at my [repository](https://github.com/daphnia/IODS-project). The wrangled data is [here](https://github.com/daphnia/IODS-project/blob/master/data/student_alc_analysis.csv).
+
+##Analysis
+
+The data is about student alcohol consumption researched among students in mathematics and Portugal language courses. The variables are explained here at the [source of data](https://archive.ics.uci.edu/ml/datasets/Student+Performance). Let's first read the data set into memory and have a look at the variable names in the data set. 
+```{r echo=T}
+#getwd()
+#NOTE: some functions are commented out to make the knitted output more simple.
+alc <- read.csv("data/student_alc_analysis.csv", header = TRUE)
+library(dplyr)
+glimpse(alc)
+```

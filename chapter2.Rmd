@@ -93,7 +93,7 @@ plot(my_best_model, which = c(1,2,5))
 
 As the model is linear regression it is assumed that the relationship between attitude and exam points are linear. From the scatter plots further above it can be seen that this is not exactly the case: there are some observations where exam points are exceptionally low regardless of the attitude. It can be imagined, that these observations reflects some problems – not attitude problems – in gathering exam points. 
 
-1. Residuals vs fitted values is a plot that can be used to check the model assumption that the residuals (ε, size of the errors) do not depend on explanatory variables but only on random variability (in other words, residuals has a constant variance ($σ^{2}$). In the plot the dots should be randomly distributed, otherwise it indicates a problem.
+1. Residuals vs fitted values is a plot that can be used to check the model assumption that the residuals (ε, size of the errors) do not depend on explanatory variables but only on random variability (in other words, residuals has a constant variance $σ^{2}$. In the plot the dots should be randomly distributed, otherwise it indicates a problem.
     i) In these cases there can be seen some tails and also a group of outliers near the x-axle. 
 2. Normal QQ-plot can be used to check, are residuals distributed normally. If they are, the dots should be aligned on the line.
     i) In these cases there can be seen some tails.
