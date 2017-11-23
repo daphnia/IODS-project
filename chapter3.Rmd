@@ -8,7 +8,10 @@ output: html_document
 -->
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE))
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
 ```
 
 #RStudio exercise 3: Logistic Regression
@@ -18,11 +21,16 @@ For details and links to further information about the data have a look at the w
 
 ##Analysis
 
-The data is about student alcohol consumption researched among students in mathematics and Portugal language courses. The variables are explained here at the [source of data](https://archive.ics.uci.edu/ml/datasets/Student+Performance). Let's first read the data set into memory and have a look at the variable names in the data set. 
+The data is about student alcohol consumption researched among students in mathematics and Portugal language courses. The variables are explained here at the [source of data](https://archive.ics.uci.edu/ml/datasets/Student+Performance) under the title Attribute information. Let's first read the data set into memory and have a look at the variable names in the data set and summeries of the variables. 
 ```{r echo=T}
 #getwd()
 #NOTE: some functions are commented out to make the knitted output more simple.
 alc <- read.csv("data/student_alc_analysis.csv", header = TRUE)
-library(dplyr)
 glimpse(alc)
+summary(alc)
 ```
+Here is a graphical summary of the variables (I would call it a kind of histogram of factors), although it is not perfect as for example the x-axle of absences is not in correct order. It seems to use alphanumerical order instead of numerical: 
+```{r echo=T}
+gather(alc) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar()
+```
+**To be continued...**

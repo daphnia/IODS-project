@@ -22,13 +22,13 @@ library(dplyr)
 join_by <- c("school","sex","age","address","famsize","Pstatus","Medu","Fedu","Mjob","Fjob","reason","nursery","internet")
 #Let's use suffixes ".math" and ".por" to mark the source data.frame and 
 #use inner join to include only the students who answered the both course 
-#questionaires (retain only rows with matches):
+#questionaires (retain only rows with matches in join_by variables):
 math_por <- inner_join(mat, por, by = join_by, suffix = c(".math", ".por"))
 colnames(math_por)
 str(math_por)
-#^So, now there might be duplicated answers in the joined data, 
-#if student has answered differently in two questionaires. To fix this, 
-#let's use programming to combine these 'duplicated' answers by either:
+#^So, now there might be answers in the joined data, 
+#where student has answered differently in two questionaires. To fix this, 
+#let's use programming to combine these differing answers by either:
 #1) taking the rounded average (if the two variables are numeric)
 #2) simply choosing the first answer (else).
 #Let's create a new data frame called alc, first only out of the joined columns:
