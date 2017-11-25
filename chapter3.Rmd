@@ -17,11 +17,11 @@ library(ggplot2)
 #RStudio exercise 3: Logistic Regression
 
 ## Data Wrangling
-For details and links to further information about the data have a look at the wrangling script [create_alc.R](https://github.com/daphnia/IODS-project/blob/master/data/create_alc.R) at my [repository](https://github.com/daphnia/IODS-project). The wrangled data is [here](https://github.com/daphnia/IODS-project/blob/master/data/student_alc_analysis.csv).
+For details and links to further information about the data have a look at the wrangling script [create_alc.R](https://github.com/daphnia/IODS-project/blob/master/data/create_alc.R) at my repository. The wrangled data is [here](https://github.com/daphnia/IODS-project/blob/master/data/student_alc_analysis.csv).
 
 ##Analysis
 
-The data is about student alcohol consumption researched among students in mathematics and Portugal language courses. The variables are explained here at the [source of data](https://archive.ics.uci.edu/ml/datasets/Student+Performance) under the title Attribute information. Let's first read the data set into memory and have a look at the variable names in the data set and summeries of the variables. 
+The data has been gathered among students attending mathematics and Portugal language courses in two Portuguese schools. The variables are explained here at the [source of data](https://archive.ics.uci.edu/ml/datasets/Student+Performance) under the title Attribute information. Originally the data was gathered to study predicting student performance in secondary education. In this analysis the focus is on student alcohol consumption. Let's first read the data set into memory and have a look at the variable names in the data set and summeries of the variables. 
 ```{r echo=T}
 #getwd()
 #NOTE: some functions are commented out to make the knitted output more simple.
@@ -29,8 +29,18 @@ alc <- read.csv("data/student_alc_analysis.csv", header = TRUE)
 glimpse(alc)
 summary(alc)
 ```
-Here is a graphical summary of the variables (I would call it a kind of histogram of factors), although it is not perfect as for example the x-axle of absences is not in correct order. It seems to use alphanumerical order instead of numerical: 
-```{r echo=T}
-gather(alc) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar()
+Here is a graphical summary of the variables (I would call it a kind of histogram of factors), although it is not perfect as for example the scale of x-axles for the variables *absences*, *G1*, *G2* and *G3* are not in correct order. It seems to be presented in alphanumerical order (1, 10, 11, 12, ..., 19, 2, 20, 21, ...) instead of numerical. **Tip**: Right click the image of plots and choose "Show image" to zoom closer.  
+```{r echo=T, fig.height=36, fig.width=12}
+gather(alc) %>% ggplot(aes(value)) + facet_wrap("key", ncol = 3, scales = "free") + geom_bar()
 ```
+
+Hypothesis based on the data below: Being a male increases the risk to adopt high alcohol consumption habits.
+```{r echo = T}
+alc %>% group_by(high_use, sex) %>% summarise(count = n(), mean_grade = mean(G3))
+```
+Hypothesis based on the data below: Living in urban area decreases alcohol consumption.
+```{r echo = T}
+alc %>% group_by(high_use, address) %>% summarise(count = n(), mean_grade = mean(G3))
+```
+
 **To be continued...**

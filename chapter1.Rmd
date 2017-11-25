@@ -1,5 +1,28 @@
+---
+title: "IODS course diary"
+author: "Hans Hellén"
+output:
+  html_document:
+    theme: journal
+    toc: true
+    toc_depth: 2
+    fig_caption: true
+    fig_width: 8
+    fig_height: 6
+    code_folding: hide
+---
+
+
 # About the project
 
 **This is a very famous course called [Introduction to Open Data Science](https://courses.helsinki.fi/fi/HYMY005/120776718) organised at University of Helsinki in autumn 2017.** My personal repository is [here](https://github.com/daphnia/IODS-project). 
 
-I am working with `r R.version.string` (nickname `r R.version$nickname`) and currently I have RStudio version 1.0.136. I found it helpful to adjust the GUI size a bit larger and change the theme to *Merbivore*: Go to *Tools* > *Global Options* > *Appearance*, and adjust there *Zoom* and *Editor theme*. The R Markdown theme called *journal* is in my opinion the most readable for the course diary. 
+I am working with `r R.version.string` (nickname `r R.version$nickname`) and currently I have RStudio version 1.0.136. I found it helpful to adjust the GUI size a bit larger and change the theme to *Merbivore*: Go to *Tools* > *Global Options* > *Appearance*, and adjust there *Zoom* and *Editor theme*. The R Markdown theme called *journal* is used in this course diary. Command `?html_dependency_bootstrap()` to find the list of themes. The font size had to be adjusted bigger by adding this lines to index.Rmd:  
+
+`<style type="text/css">`  
+
+`body{ /* Normal  */`  
+`      font-size: 20px;`  
+`  }`  
+
+`</style>`
