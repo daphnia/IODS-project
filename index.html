@@ -480,6 +480,28 @@ glimpse(alc)</code></pre>
 ## 2    FALSE       U   218   12.04128
 ## 3     TRUE       R    31   10.74194
 ## 4     TRUE       U    83   10.83133</code></pre>
+<p>Hypothesis based on the data below: Getting educational support from family decreases alcohol consumption.</p>
+<pre class="r"><code>alc %&gt;% group_by(high_use, famsup) %&gt;% summarise(count = n(), mean_grade = mean(G3))</code></pre>
+<pre><code>## Source: local data frame [4 x 4]
+## Groups: high_use [?]
+## 
+##   high_use famsup count mean_grade
+##      &lt;lgl&gt; &lt;fctr&gt; &lt;int&gt;      &lt;dbl&gt;
+## 1    FALSE     no    98   11.85714
+## 2    FALSE    yes   170   11.66471
+## 3     TRUE     no    46   10.47826
+## 4     TRUE    yes    68   11.02941</code></pre>
+<p>Hypothesis based on the data below: Attenging paid extra classes decreases alcohol consumption.</p>
+<pre class="r"><code>alc %&gt;% group_by(high_use, paid) %&gt;% summarise(count = n(), mean_grade = mean(G3))</code></pre>
+<pre><code>## Source: local data frame [4 x 4]
+## Groups: high_use [?]
+## 
+##   high_use   paid count mean_grade
+##      &lt;lgl&gt; &lt;fctr&gt; &lt;int&gt;      &lt;dbl&gt;
+## 1    FALSE     no   148   11.26351
+## 2    FALSE    yes   120   12.31667
+## 3     TRUE     no    57   10.66667
+## 4     TRUE    yes    57   10.94737</code></pre>
 <p><strong>To be continued…</strong></p>
 <hr />
 </div>

@@ -42,5 +42,13 @@ Hypothesis based on the data below: Living in urban area decreases alcohol consu
 ```{r echo = T}
 alc %>% group_by(high_use, address) %>% summarise(count = n(), mean_grade = mean(G3))
 ```
+Hypothesis based on the data below: Getting educational support from family decreases alcohol consumption.
+```{r echo = T}
+alc %>% group_by(high_use, famsup) %>% summarise(count = n(), mean_grade = mean(G3))
+```
+Hypothesis based on the data below: Attenging paid extra classes decreases alcohol consumption.
+```{r echo = T}
+alc %>% group_by(high_use, paid) %>% summarise(count = n(), mean_grade = mean(G3))
+```
 
 **To be continued...**
