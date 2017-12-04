@@ -67,7 +67,7 @@ head(gii$SEM)
 ##DATAFRAME <- dplyr::select(DATAFRAME, -VAR)
 glimpse(hd)
 #Let's use inner join to combine the data frames hd and gii using countries as a nominator:
-human <- inner_join(hd, gii, by = hd$Country)
+human <- inner_join(hd, gii, by = "Country")
 colnames(human)
 glimpse(human)
 

@@ -1,10 +1,10 @@
----
+<!-- ---
 title: "RStudio exercise 5: Dimensionality reduction techniques"
 author: "Hans Hellén"
 date: "4 joulukuuta 2017"
 output: html_document
 ---
-
+-->
 
 ```{r setup5, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
@@ -13,6 +13,11 @@ library(MASS)
 library(tidyr)
 library(ggplot2)
 ```
+
+#RStudio exercise 5: Dimensionality reduction techniques
+
+## Data Wrangling
+Check out the link at the end of exercise 4.
 
 ## Analysis
 To be published in 10^th^ Dec.
