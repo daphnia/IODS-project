@@ -1,0 +1,165 @@
+<!-- 
+---
+title: "RStudio exercise 4: Clustering and classification"
+author: "Hans Hellén"
+date: "Wed Nov 29 22:56:57 2017"
+output: html_document
+---
+-->
+
+```{r setup4, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(MASS)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+```
+#RStudio exercise 4: Clustering and classification
+
+## Analysis
+```{r echo=T}
+#<!--NOTE: some functions are commented out to make the knitted output more simple.-->
+data("Boston")
+str(Boston)
+```
+
+The data used in this exercise is called Boston and comes from R library MASS. The data frame is about housing values in suburbs of Boston and it has 506 observations and 14 variables which are explained on [this](https://stat.ethz.ch/R-manual/R-devel/library/MASS/html/Boston.html) webpage. In short the variables are about crime rate, urban planning, housing, air pollution, economy, school environment, skin colour. The variables chas (Charles River dummy variable which is 1 if tract bounds river and 0 otherwise) and rad (index of accessibility to radial highways) are integers others are numerical. 
+
+###Let's have a look at the data
+Summary off the variables are below:
+```{r echo=T}
+library(GGally)
+summary(Boston)
+```
+
+Scatter plots of all the variables are presented in a matrix below. **Tip**: Right click the image of plots and choose "Show image" to zoom closer. 
+```{r echo=T, fig.height=18, fig.width=18}
+library(ggplot2)
+p41 <- ggpairs(Boston, lower = list(combo = wrap("facethist", bins = 20)))
+p41
+```
+
+
+Most of the variables are far from normally distributed. This can be seen clearly from a histogram below as there is a couple of suburbs with extreme crime rates per capita: 
+```{r echo=T}
+p4_crime <- ggplot(Boston, aes(crim)) + geom_histogram(binwidth = 1, fill="purple", colour="red") + ggtitle("Histogram of per capita crime rate by town")
+p4_crime
+korrelaatiot <- cor(Boston)
+```
+
+Let's have a look again at the scatter plots:
+
+* **distributions:** There are many phenomenons with clear non-linear relationship (eg. nox vs. distance, meaning air pollution is diluted non-linearly when moving away from pollution sources). The variable black gets smaller values as the proportion of black skin colour rises: the mean proportion of black skin colour is about 3.3% and median proportion is 0.43%. 
+* **histograms:** Only the rm (average number of rooms per dwelling) are closely normally distributed. Indus gives an impression about two industrial areas. 
+* **Corralation coefficiensts:** High correlation (>0.5, bold font if >0.7, + indicates positive correlation and - negative) are found between the following variables: 
+    + crim+rad, crim+trad
+    + zn+dis, zn-age, zn-indus, zn-nox, 
+    + **indus+nox**, **indus+tax**, indus+age, indus+lstat, indus+rad, **indus-dis**,
+    + **nox+age**, nox+tax, nox+rad, nox+lstat, **nox-dis**, 
+    + rm+medv, rm-lstat
+    + age+lstat, age+tax, **age-dis**, 
+    + dis-tax, 
+    + **rad+tax**, 
+    + tax+lstat,
+    + ptratio-medv
+    + **lstat-medv**.
+* Okay let's think, what was the point to do this list manually after making a data object by `korrelaatiot <- cor(Boston)` and using window view (`View(korrelaatiot)`) of RStudio? Not always are the most interesting correlations the ones that has a high R-squared. 
+
+So, obviously, it would have been a lot easier to use a package corrplot and a function:
+```{r echo=T}
+#corrplot(korrelaatiot, type = "upper", cl.pos = "b", tl.pos = "d", tl.cex = 0.6, method="circle")
+```
+Unfortunately, the package corrplot is not available for R version 3.2.5 in my use. 
+
+###Let's standardize (scale and center) the dataset:
+```{r echo=T}
+boston_scaled <- scale(Boston)
+summary(boston_scaled)
+```
+Now the values are centered around the means and scaled by dividing by standard deviation. 
+
+```{r echo=T}
+#boston_scaled is matrix object as function class(boston_scaled) would tell. Let's change it to a data.frame:
+boston_scaled <- as.data.frame(boston_scaled)
+```
+In LDA the target variable has to be categorical. So let's create a categorical crime rate variable (crime) by cutting the original by quantiles to get the high, low and middle rates of crime:
+```{r echo=T}
+scaled_crim <- boston_scaled$crim
+bins <- quantile(scaled_crim)
+bins
+crime <- cut(scaled_crim, breaks = bins, label = c("low", "med_low", "med_high", "high"),  include.lowest = TRUE)
+#the following shows the table of the new factor crime:
+table(crime)
+#remove original crim from the dataset (note that here "select" is used from a package dplyr)
+#str(boston_scaled)
+boston_scaled <- dplyr::select(boston_scaled, -crim)
+#then let's insert the new variable to data.frame:
+boston_scaled <- data.frame(boston_scaled, crime)
+```
+The standardized dataset is then randomly split to a **test** (containing 20 % of observations) and **train** (80 %) sets.
+```{r echo=T}
+n <- nrow(boston_scaled)
+# choose randomly 80% of the n rows and save those rows to ind
+ind <- sample(n,  size = n * 0.8)
+train <- boston_scaled[ind,]
+test <- boston_scaled[-ind,]
+```
+
+###Linear Discriminant Analysis (LDA)
+
+Below is linear discriminant analysis fitted on the **train** set. Crime is the target variable and all the other variables are predictor variables: 
+```{r echo=T}
+lda.fit <- lda(crime ~ ., data = train)
+#The dot above means "all the other variables"
+lda.fit
+```
+
+In the output of LDA there can be seen from the last three rows that linear discriminant 1 (LD1) explains 95 % of the between group variance in crime rate categories (per capita crime rate by town).
+
+Below is the LDA biplot for the **train** set:
+
+```{r echo=T, fig.height=9, fig.width=12}
+#To draw a LDA biplot, the following has to be done:
+#Numeric crime classes:
+train_classes <- as.numeric(train$crime)
+# the biplot arrows
+lda.arrows <- function(x, myscale = 1, arrow_heads = 0.1, color = "red", tex = 0.75, choices = c(1,2)){
+  heads <- coef(x)
+  arrows(x0 = 0, y0 = 0, 
+         x1 = myscale * heads[,choices[1]], 
+         y1 = myscale * heads[,choices[2]], col=color, length = arrow_heads)
+  text(myscale * heads[,choices], labels = row.names(heads), 
+       cex = tex, col=color, pos=3)
+}
+#The biplot:
+plot(lda.fit, dimen = 2, col = train_classes, pch = train_classes)
+lda.arrows(lda.fit, myscale = 2)
+```
+
+Next let's do some model validation by using **test** dataset. So we check how accurately the fitted LDA model can be used in predictions. You can find help in R using a function `?predict.lda`.
+```{r echo=T}
+#As crime is the target variable, so let's remove that one from the test dataset.
+#First save the correct crime classes from test data
+test_classes <- test$crime
+#then remove the crime variable from test data
+test <- dplyr::select(test, -crime)
+#str(test)
+#Note: the model is the first argument in the predict function. 
+lda.pred <- predict(lda.fit, newdata = test)
+# cross tabulate the results
+table(correct = test_classes, predicted = lda.pred$class)
+#### 
+##Might be needed for drawing (bi)plot: 
+##first let's make numeric crime classes:
+##test_classes <- as.numeric(test_classes)
+#VÄÄRÄ: lda.pred <- lda(crime ~ ., data = test)
+#The dot above means "all the other variables"
+#lda.pred
+```
+
+From the above cross tabulation can be seen that the LDA model created (*lda.fit*) performs quite well only in high and med_high categories as medium_low and low crime rates got about evenly right and wrong predictions.
+
+##To be continued...
+
+## Data Wrangling
+...in a R script file create_human.R. To be published at [Github](https://github.com/daphnia/IODS-project/blob/master/data/create_human.R).

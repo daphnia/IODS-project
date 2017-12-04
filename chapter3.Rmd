@@ -26,6 +26,7 @@ The data has been gathered among students attending mathematics and Portugal lan
 #getwd()
 #NOTE: some functions are commented out to make the knitted output more simple.
 alc <- read.csv("data/student_alc_analysis.csv", header = TRUE)
+#colnames(alc)
 glimpse(alc)
 summary(alc)
 ```
