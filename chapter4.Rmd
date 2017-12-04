@@ -76,7 +76,7 @@ Unfortunately, the package corrplot is not available for R version 3.2.5 in my u
 boston_scaled <- scale(Boston)
 summary(boston_scaled)
 ```
-Now the values are centered around the means and scaled by dividing by standard deviation. 
+Now the values are centered around the means and scaled by dividing by standard deviation to make the value proportional to the variability. 
 
 ```{r echo=T}
 #boston_scaled is matrix object as function class(boston_scaled) would tell. Let's change it to a data.frame:
@@ -114,7 +114,7 @@ lda.fit <- lda(crime ~ ., data = train)
 lda.fit
 ```
 
-In the output of LDA there can be seen from the last three rows that linear discriminant 1 (LD1) explains 95 % of the between group variance in crime rate categories (per capita crime rate by town).
+In the output of LDA there can be seen from the last three rows that linear discriminant 1 (LD1; linear combination of variables that separate the target variable classes/categories) explains 95 % of the between group variance in crime rate categories (per capita crime rate by town).
 
 Below is the LDA biplot for the **train** set:
 
@@ -136,6 +136,8 @@ plot(lda.fit, dimen = 2, col = train_classes, pch = train_classes)
 lda.arrows(lda.fit, myscale = 2)
 ```
 
+From the picture above, it looks like the rad ("index of accessibility to radial highways") is strongly related (high correlation, like it can be read from the scatter plot further above: 0,626) to the high crime rate. That is because of the angle between the rad arrow and a LD1 axis on small. Although, as the lenght of rad arrow is so long, it means that the standard deviation in rad is also high. 
+
 Next let's do some model validation by using **test** dataset. So we check how accurately the fitted LDA model can be used in predictions. You can find help in R using a function `?predict.lda`.
 ```{r echo=T}
 #As crime is the target variable, so let's remove that one from the test dataset.
@@ -149,7 +151,7 @@ lda.pred <- predict(lda.fit, newdata = test)
 # cross tabulate the results
 table(correct = test_classes, predicted = lda.pred$class)
 #### 
-##Might be needed for drawing (bi)plot: 
+##Might be needed for drawing biplot: 
 ##first let's make numeric crime classes:
 ##test_classes <- as.numeric(test_classes)
 #VÄÄRÄ: lda.pred <- lda(crime ~ ., data = test)
@@ -157,9 +159,9 @@ table(correct = test_classes, predicted = lda.pred$class)
 #lda.pred
 ```
 
-From the above cross tabulation can be seen that the LDA model created (*lda.fit*) performs quite well only in high and med_high categories as medium_low and low crime rates got about evenly right and wrong predictions.
+From the above cross tabulation can be seen that the learned LDA model (*lda.fit*) performs quite well only in high and medium_low categories as medium_high and low crime rates got significant proportions of both right and wrong predictions.
 
-##To be continued...
+**To be continued: Clustering...**
 
 ## Data Wrangling
 ...in a R script file create_human.R. To be published at [Github](https://github.com/daphnia/IODS-project/blob/master/data/create_human.R).

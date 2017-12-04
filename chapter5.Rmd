@@ -1,0 +1,21 @@
+---
+title: "RStudio exercise 5: Dimensionality reduction techniques"
+author: "Hans Hellén"
+date: "4 joulukuuta 2017"
+output: html_document
+---
+
+
+```{r setup5, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(MASS)
+#library(dplyr)
+library(tidyr)
+library(ggplot2)
+```
+
+## Analysis
+To be published in 10^th^ Dec.
+```{r echo=T}
+#<!--NOTE: some functions are commented out to make the knitted output more simple.-->
+```
