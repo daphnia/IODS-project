@@ -21,7 +21,7 @@ For details and links to further information about the data have a look at the w
 
 ##Analysis
 
-The data has been gathered among students attending mathematics and Portugal language courses in two Portuguese schools. The variables are explained here at the [source of data](https://archive.ics.uci.edu/ml/datasets/Student+Performance) under the title Attribute information. Originally the data was gathered to study predicting student performance in secondary education. In this analysis the focus is on student alcohol consumption. Let's first read the data set into memory and have a look at the variable names in the data set and summeries of the variables. 
+The data has been gathered among students attending mathematics and Portugal language courses in two Portuguese schools. The variables are explained here at the [source of data](https://archive.ics.uci.edu/ml/datasets/Student+Performance) under the title Attribute information. Originally the data was gathered to study predicting student performance in secondary education. In this analysis the focus is on student alcohol consumption. Let's first read the data set into memory and have a look at the variable names in the data set and summaries of the variables. 
 ```{r echo=T}
 #getwd()
 #NOTE: some functions are commented out to make the knitted output more simple.
@@ -29,8 +29,10 @@ alc <- read.csv("data/student_alc_analysis.csv", header = TRUE)
 #colnames(alc)
 glimpse(alc)
 summary(alc)
+g2 <- ggplot(data = alc, aes(x = high_use, fill = sex))
+g2 + geom_bar() + facet_wrap("sex")
 ```
-Here is a graphical summary of the variables (I would call it a kind of histogram of factors), although it is not perfect as for example the scale of x-axles for the variables *absences*, *G1*, *G2* and *G3* are not in correct order. It seems to be presented in alphanumerical order (1, 10, 11, 12, ..., 19, 2, 20, 21, ...) instead of numerical. **Tip**: Right click the image of plots and choose "Show image" to zoom closer.  
+Here is a graphical summary of the variables (frequency bar plots), although it is not perfect as for example the scale of x-axles for the variables *absences*, *G1*, *G2* and *G3* are not in correct order. It seems to be presented in alphanumerical order (1, 10, 11, 12, ..., 19, 2, 20, 21, ...) instead of numerical. **Tip**: Right click the image of plots and choose "Show image" to zoom closer.  
 ```{r echo=T, fig.height=36, fig.width=12}
 gather(alc) %>% ggplot(aes(value)) + facet_wrap("key", ncol = 3, scales = "free") + geom_bar()
 ```
@@ -47,9 +49,11 @@ Hypothesis based on the data below: Getting educational support from family decr
 ```{r echo = T}
 alc %>% group_by(high_use, famsup) %>% summarise(count = n(), mean_grade = mean(G3))
 ```
-Hypothesis based on the data below: Attenging paid extra classes decreases alcohol consumption.
+Hypothesis based on the data below: Attending paid extra classes decreases alcohol consumption.
 ```{r echo = T}
 alc %>% group_by(high_use, paid) %>% summarise(count = n(), mean_grade = mean(G3))
 ```
+
+Note that all the four explanatory variables used above happened to be categorical. 
 
 **To be continued...**

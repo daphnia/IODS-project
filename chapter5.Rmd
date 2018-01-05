@@ -20,7 +20,7 @@ library(ggplot2)
 Check out the link at the end of exercise 4.
 
 ## Analysis
-To be published in 10^th^ Dec.
+To be published in 10^th^ Dec. *Edit:* unfortunately this exercise had to be left without the analysis part. 
 ```{r echo=T}
 #<!--NOTE: some functions are commented out to make the knitted output more simple.-->
 ```
