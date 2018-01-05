@@ -8,7 +8,7 @@
 > - Assume the reader has no previous knowledge of your data or the more advanced methods you are using  -->
 
 ## Data Wrangling and General Remarks
-First I did some data wrangling, i.e. formatting a dataset to be suitable and nice to be used in an analysis later, in this case in regression analysis. The data wrangling was done in a R Script file *create_learning2014.R* and the formatted dataset is in a file *learning2014.csv*. As described in the wrangling file the data was originally collected for international survey of Approaches to Learning. For details and links to further information have a look at the [create_learning2014.R](https://github.com/daphnia/IODS-project/blob/master/data/create_learning2014.R) at my [repository](https://github.com/daphnia/IODS-project).
+First I did some data wrangling, i.e. formatting a dataset to be suitable and nice to be used in an analysis later, in this case in regression analysis. The data wrangling was done in an R script file *create_learning2014.R* and the formatted dataset is in a file *learning2014.csv*. As described in the wrangling file the data was originally collected for international survey of Approaches to Learning. For details and links to further information have a look at the [create_learning2014.R](https://github.com/daphnia/IODS-project/blob/master/data/create_learning2014.R) at my [repository](https://github.com/daphnia/IODS-project).
 
 After practising and doing a bit of the exercise the RStudio workspace became a bit cluttered. So, I found that a function `remove(...)` can be used to remove objects from the memory. It is handy to clean up the environment once in a while.
 
@@ -16,7 +16,7 @@ Another important thing is that you have to load the extra libraries every time 
 
 ##Analysis
 
-Let's first read the data set into memory and have a look at the data set. Summary off the variables are below:
+Let's first read the data set into memory and have a look at the data set. Summary of the variables are below:
 ```{r echo=T}
 #getwd()
 #NOTE: some functions are commented out to make the knitted output more simple.
@@ -38,8 +38,8 @@ Scatter plots of all the variables using gender as a factor are presented in a m
 pairs(learning2014[-1], col=learning2014$gender)
 ```
 
-GGally and ggplot2 produces another, more informative, scatterplot matrix:
-```{r echo=T, fig.cap="**In this scatter plot matrix red color marks females and blue color marks males**",fig.height=9, fig.width=12}
+GGally and ggplot2 produces another, more informative, scatter plot matrix:
+```{r echo=T, fig.cap="**In this scatter plot matrix red colour marks females and blue colour marks males**",fig.height=9, fig.width=12}
 library(ggplot2)
 library(GGally)
 p <- ggpairs(learning2014, mapping = aes(col = gender, alpha = 0.3), lower = list(combo = wrap("facethist", bins = 20)))
